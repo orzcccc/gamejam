@@ -2,6 +2,6 @@ public enum GridType
 {
     Road,
     Block,
-    Water,
-    Grass
+    Target,
+    Food
 }

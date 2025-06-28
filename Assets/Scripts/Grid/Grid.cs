@@ -5,4 +5,9 @@ using UnityEngine;
 public class Grid
 {
     public GridType type;
+
+    public Grid()
+    {
+        
+    } 
 }

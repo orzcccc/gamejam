@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GridBase : MonoBehaviour
 {
-    private Grid grid;
+    private Grid grid = new Grid();
     private SpriteRenderer spriteRenderer;
     private void Awake()
     { 

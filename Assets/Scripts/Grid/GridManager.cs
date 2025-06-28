@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -115,6 +114,7 @@ public class GridManager : SingletonMono<GridManager>
             Destroy(child.gameObject);
         }
         spawnedCells.Clear(); // 清空列表以便运行时再记录
+        gridDic.Clear();
     }
 
     #region 编辑器模式
@@ -127,8 +127,8 @@ public class GridManager : SingletonMono<GridManager>
         {
             GridType.Road => Color.white,
             GridType.Block => Color.black,
-            GridType.Water => Color.blue,
-            GridType.Grass => Color.green,
+            GridType.Food => Color.blue,
+            GridType.Target => Color.green,
             _ => Color.white,
         };
     }
