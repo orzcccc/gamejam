@@ -152,12 +152,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 470ff40ed55b64541bf21440ec3498cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  rows: 10
-  columns: 10
   cellDistance: 0.8
   size: 6
-  lists: []
+  gridDatas:
+  - {fileID: 11400000, guid: 59b4e5ba5d6010246afed479cbd000e0, type: 2}
+  - {fileID: 11400000, guid: 25d67a6a1e1e3314493905984407e0c8, type: 2}
+  typeSprites:
+  - {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  previewLevelIndex: 1
 --- !u!4 &383581067
 Transform:
   m_ObjectHideFlags: 0

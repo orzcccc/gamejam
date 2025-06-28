@@ -10,13 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3fff0ecc74b8f348a2d2c7379ff3ea8, type: 3}
-  m_Name: Level1
+  m_Name: Level0
   m_EditorClassIdentifier: 
-  Level: 1
-  rows: 4
-  columns: 4
+  Level: 0
+  rows: 2
+  columns: 2
   gridRows:
-  - row: 01000000010000000100000001000000
-  - row: 00000000000000000000000000000000
-  - row: 00000000000000000000000000000000
-  - row: 00000000000000000000000000000000
+  - row: 0100000000000000
+  - row: 0000000000000000

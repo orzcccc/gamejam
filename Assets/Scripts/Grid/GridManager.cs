@@ -1,20 +1,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public class GridManager : SingletonMono<GridManager>
 {
-    [Header("Grid Settings")]
-    public float cellDistance = 0.8f;    // 格子间距
-    public float size = 6f;            // 格子缩放大小（1 = 原图大小）
+    [Header("Grid Settings")] public float cellDistance = 0.8f; // 格子间距
+    public float size = 6f; // 格子缩放大小
 
-    [Header("Grid Data")]
-    public GridSO gridData;           // 地图配置数据
+    [Header("Grid Data")] public List<GridSO> gridDatas; // 多个地图配置数据（多个关卡）
+    private GridSO gridData; // 当前使用的地图配置（缓存）
 
-    [Header("GridType Sprite List")]
-    public List<Sprite> typeSprites;  // GridType -> Sprite 映射（顺序需一致）
+    [Header("GridType Sprite List")] public List<Sprite> typeSprites; // GridType -> Sprite 映射
+
+    private List<GameObject> spawnedCells = new(); // 记录已生成格子
+
+    protected override void Awake()
+    {
+        base.Awake();
+        ClearGrid(); // 避免残留
+    }
 
     void Start()
     {
+        // 默认加载第一个关卡
+        if (gridDatas != null && gridDatas.Count > 0)
+            StartLevel(0);
+    }
+
+    public void StartLevel(int index)
+    {
+        if (index < 0 || index >= gridDatas.Count)
+        {
+            Debug.LogError("GridManager: 关卡索引超出范围！");
+            return;
+        }
+
+        gridData = gridDatas[index];
+        ClearGrid();
         GenerateGrid();
     }
 
@@ -39,7 +60,7 @@ public class GridManager : MonoBehaviour
 
         for (int y = 0; y < rows; y++)
         {
-            int flippedY = rows - 1 - y; 
+            int flippedY = rows - 1 - y;
 
             for (int x = 0; x < columns; x++)
             {
@@ -61,33 +82,54 @@ public class GridManager : MonoBehaviour
         cell.transform.parent = this.transform;
 
         SpriteRenderer renderer = cell.AddComponent<SpriteRenderer>();
-
         int index = (int)type;
+
         if (index >= 0 && index < typeSprites.Count)
-        {
             renderer.sprite = typeSprites[index];
-        }
         else
-        {
             Debug.LogWarning($"GridManager: GridType {type} 没有对应的 Sprite！");
-        }
 
         cell.transform.localScale = new Vector3(size, size, 1);
+
+        spawnedCells.Add(cell); // 记录生成的格子
     }
-    
+
+    public void ClearGrid()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        spawnedCells.Clear(); // 清空列表以便运行时再记录
+    }
+
+
+    ////////////////////////编辑器模式
+#if UNITY_EDITOR
+    public int previewLevelIndex = 0; // 在 Inspector 中切换关卡
+#endif
     private Color GetColorByType(GridType type)
     {
-        switch (type)
+        return type switch
         {
-            case GridType.Road: return Color.gray;
-            case GridType.Block: return Color.white;
-            case GridType.Water: return Color.blue;
-            case GridType.Grass: return Color.green;
-            default: return Color.white;
-        }
+            GridType.Road => Color.white,
+            GridType.Block => Color.black,
+            GridType.Water => Color.blue,
+            GridType.Grass => Color.green,
+            _ => Color.white,
+        };
     }
+
     private void OnDrawGizmosSelected()
     {
+        if (gridDatas == null || gridDatas.Count == 0)
+            return;
+
+        if (previewLevelIndex < 0 || previewLevelIndex >= gridDatas.Count)
+            return;
+
+        gridData = gridDatas[previewLevelIndex]; // 根据预览索引获取 gridData
         if (gridData == null || gridData.gridRows == null)
             return;
 
@@ -104,7 +146,7 @@ public class GridManager : MonoBehaviour
 
         for (int y = 0; y < rows; y++)
         {
-            int flippedY = rows - 1 - y; // 方向翻转保持一致
+            int flippedY = rows - 1 - y;
 
             for (int x = 0; x < columns; x++)
             {
@@ -119,5 +161,4 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-
 }

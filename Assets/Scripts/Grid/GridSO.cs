@@ -41,7 +41,7 @@ public class GridSO : ScriptableObject
                 }
                 else
                 {
-                    newGrid[y].row[x] = GridType.Block;
+                    newGrid[y].row[x] = GridType.Road;
                 }
             }
         }
