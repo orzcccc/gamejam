@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: 
   Level: 1
-  rows: 4
-  columns: 4
-  gridRows:
-  - row: 01000000010000000100000001000000
-  - row: 00000000000000000000000000000000
-  - row: 00000000000000000000000000000000
-  - row: 00000000000000000000000000000000
+  rows: 10
+  columns: 30
+  gridRows: []

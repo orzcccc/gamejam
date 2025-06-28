@@ -780,7 +780,7 @@ MonoBehaviour:
   - {fileID: 5471296580762629500, guid: d9bec924df1871e42a45fea4d4903ce1, type: 3}
   - {fileID: 5471296580762629500, guid: badfb8a4a69983a45ae2773dd61bc148, type: 3}
   - {fileID: 5471296580762629500, guid: 04e6993de75191641bb9446c2f864ecf, type: 3}
-  previewLevelIndex: 0
+  previewLevelIndex: 1
 --- !u!4 &383581067
 Transform:
   m_ObjectHideFlags: 0
