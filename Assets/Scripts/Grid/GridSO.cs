@@ -45,7 +45,6 @@ public class GridSO : ScriptableObject
                 }
             }
         }
-
         rows = newRows;
         columns = newColumns;
         gridRows = newGrid;

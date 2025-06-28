@@ -1,16 +1,22 @@
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class GridManager : SingletonMono<GridManager>
 {
-    [Header("Grid Settings")] public float cellDistance = 0.8f; // 格子间距
+    [Header("Grid Settings")] 
+    public float cellDistance = 0.8f; // 格子间距
     public float size = 6f; // 格子缩放大小
 
-    [Header("Grid Data")] public List<GridSO> gridDatas; // 多个地图配置数据（多个关卡）
+    [Header("Grid Data")] 
+    public List<GridSO> gridDatas; // 多个地图配置数据（多个关卡）
     private GridSO gridData; // 当前使用的地图配置（缓存）
-
-    [Header("GridType Sprite List")] public List<Sprite> typeSprites; // GridType -> Sprite 映射
-
+    private Dictionary<Vector2Int, GridBase> gridDic = new Dictionary<Vector2Int, GridBase>();
+        
+    [Header("GridType Sprite List")]
+    public List<GameObject> prefabs = new List<GameObject>(); // GridType -> prefabs 映射
     private List<GameObject> spawnedCells = new(); // 记录已生成格子
 
     protected override void Awake()
@@ -77,21 +83,29 @@ public class GridManager : SingletonMono<GridManager>
 
     void CreateCell(Vector2 position, int x, int y, GridType type)
     {
-        GameObject cell = new GameObject($"Cell_{x}_{y}");
-        cell.transform.position = position;
-        cell.transform.parent = this.transform;
-
-        SpriteRenderer renderer = cell.AddComponent<SpriteRenderer>();
         int index = (int)type;
 
-        if (index >= 0 && index < typeSprites.Count)
-            renderer.sprite = typeSprites[index];
-        else
-            Debug.LogWarning($"GridManager: GridType {type} 没有对应的 Sprite！");
+        if (index < 0 || index >= prefabs.Count || prefabs[index] == null)
+        {
+            Debug.LogWarning($"GridManager: GridType {type} 没有对应的 Prefab！");
+            return;
+        }
 
+        GameObject prefab = prefabs[index];
+        GameObject cell = Instantiate(prefab, position, UnityEngine.Quaternion.identity, this.transform);
+        cell.name = $"Cell_{x}_{y}";
         cell.transform.localScale = new Vector3(size, size, 1);
 
-        spawnedCells.Add(cell); // 记录生成的格子
+        // 可选：记录或挂脚本
+        spawnedCells.Add(cell);
+
+        // 可选：保存到字典
+        if (cell.TryGetComponent<GridBase>(out var gridBase))
+        {
+            Vector2Int coord = new Vector2Int(x, y);
+            gridDic[coord] = gridBase;
+            gridBase.Init(coord, type); // 你可以定义一个 Init 方法
+        }
     }
 
     public void ClearGrid()
@@ -100,12 +114,10 @@ public class GridManager : SingletonMono<GridManager>
         {
             Destroy(child.gameObject);
         }
-
         spawnedCells.Clear(); // 清空列表以便运行时再记录
     }
 
-
-    ////////////////////////编辑器模式
+    #region 编辑器模式
 #if UNITY_EDITOR
     public int previewLevelIndex = 0; // 在 Inspector 中切换关卡
 #endif
@@ -154,11 +166,13 @@ public class GridManager : SingletonMono<GridManager>
                     startPos.x + x * cellDistance,
                     startPos.y + y * cellDistance
                 );
-
                 GridType type = gridData.GetGridType(x, flippedY);
                 Gizmos.color = GetColorByType(type);
                 Gizmos.DrawCube(center, new Vector3(cellDistance * 0.95f, cellDistance * 0.95f, 0.1f));
             }
         }
     }
+    
+
+    #endregion
 }
