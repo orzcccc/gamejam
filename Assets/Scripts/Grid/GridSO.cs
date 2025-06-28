@@ -13,7 +13,7 @@ public class GridSO : ScriptableObject
     [Serializable]
     public class GridRow
     {
-        public GridType[] row;
+        public Grid[] row;
     }
 
     public GridType GetGridType(int x, int y)
@@ -21,7 +21,7 @@ public class GridSO : ScriptableObject
         if (gridRows == null || y < 0 || y >= gridRows.Length || x < 0 || x >= gridRows[y].row.Length)
             return GridType.Block;
 
-        return gridRows[y].row[x];
+        return gridRows[y].row[x].type;
     }
 
     public void Resize(int newRows, int newColumns)
@@ -31,22 +31,32 @@ public class GridSO : ScriptableObject
         for (int y = 0; y < newRows; y++)
         {
             newGrid[y] = new GridRow();
-            newGrid[y].row = new GridType[newColumns];
+            newGrid[y].row = new Grid[newColumns];
 
             for (int x = 0; x < newColumns; x++)
             {
-                if (y < rows && x < columns && gridRows != null && gridRows.Length > y && gridRows[y].row.Length > x)
+                // 初始化每个格子对象
+                newGrid[y].row[x] = new Grid();
+
+                if (gridRows != null &&
+                    y < rows && x < columns &&
+                    gridRows.Length > y && gridRows[y].row != null && gridRows[y].row.Length > x &&
+                    gridRows[y].row[x] != null)
                 {
-                    newGrid[y].row[x] = gridRows[y].row[x];
+                    newGrid[y].row[x].type = gridRows[y].row[x].type;
+                    newGrid[y].row[x].HP = gridRows[y].row[x].HP;
                 }
                 else
                 {
-                    newGrid[y].row[x] = GridType.Road;
+                    newGrid[y].row[x].type = GridType.Road;
+                    newGrid[y].row[x].HP = 0;
                 }
             }
         }
+
         rows = newRows;
         columns = newColumns;
         gridRows = newGrid;
     }
+
 }

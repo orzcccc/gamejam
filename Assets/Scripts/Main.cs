@@ -12,9 +12,6 @@ public class Main : MonoBehaviour
     private void Start()
     {
 
-        EventCenter.Instance.AddEventListener(E_EventType.E_Input_Skill1, () => { print("技能1"); });
-        EventCenter.Instance.AddEventListener(E_EventType.E_Input_Skill2, () => { print("技能2"); });
-        EventCenter.Instance.AddEventListener(E_EventType.E_Input_Skill3, () => { print("技能3"); });
         //ABResMgr.Instance.LoadResAsync<GameObject>("model", "Sphere", (obj) => { Instantiateobj); });
         // UWQResMgr.Instance.LoadRes<string>("file://" + Application.streamingAssetsPath + "/text.txt", (str) => { Debug.Log(str); }, () => { Debug.Log("加载失败"); });
 

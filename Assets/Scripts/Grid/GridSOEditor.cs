@@ -29,11 +29,16 @@ public class GridSOEditor : Editor
                 EditorGUILayout.BeginHorizontal();
                 for (int x = 0; x < gridSO.columns; x++)
                 {
-                    gridSO.gridRows[y].row[x] = (GridType)EditorGUILayout.EnumPopup(
-                        GUIContent.none,
-                        gridSO.gridRows[y].row[x],
-                        GUILayout.Width(70)
-                    );
+                    var grid = gridSO.gridRows[y].row[x];
+                    EditorGUILayout.BeginVertical(GUILayout.Width(0));
+                    grid.type = (GridType)EditorGUILayout.EnumPopup(GUIContent.none, grid.type, GUILayout.Width(60));
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.Label("HP", GUILayout.Width(20));
+                    grid.HP = EditorGUILayout.IntField(grid.HP, GUILayout.Width(40));
+                    EditorGUILayout.EndHorizontal();
+
+                    EditorGUILayout.EndVertical();
+
                 }
                 EditorGUILayout.EndHorizontal();
             }

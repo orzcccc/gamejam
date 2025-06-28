@@ -172,7 +172,5 @@ public class GridManager : SingletonMono<GridManager>
             }
         }
     }
-    
-
     #endregion
 }
